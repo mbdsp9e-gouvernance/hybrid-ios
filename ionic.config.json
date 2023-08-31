@@ -1,0 +1,7 @@
+{
+  "name": "front e-gouvernance",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}

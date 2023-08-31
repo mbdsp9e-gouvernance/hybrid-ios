@@ -1,0 +1,18 @@
+.title-custom{
+    text-align: center;
+    font-family: none;
+    color: #0000006e;
+}
+.bouton-menu{
+    color: rgb(145, 6, 28);
+}
+ion-item.table-header{
+    background: rgb(145, 6, 28);
+    color: white;
+    margin-top: 31px;
+    /* font-style: italic; */
+}
+
+ion-col{
+    font-size:13px;
+}

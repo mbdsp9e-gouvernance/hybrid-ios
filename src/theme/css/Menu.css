@@ -1,0 +1,39 @@
+ion-title.custom-header-menu{
+    background: rgb(145, 6, 28);
+    margin-bottom: 55px;
+    color: #ffffff;
+    font-size: 34px;
+    font-family: -webkit-body;
+}
+
+ion-toolbar.custom-menu{
+    --border-width: 0 0 0px;
+}
+ion-icon{
+    display: block;
+    width: 20px;
+    /* margin-top: 33px; */
+}
+
+ion-item.item-custom{
+    margin-top: 23px;
+    margin-bottom: 28px;
+}
+.bouton-menu{
+    color: rgb(145, 6, 28);
+}
+.bouton-menu2{
+    color: white;
+
+}
+/* .custom-menu.my-custom-toolbar {
+    height: 75px;
+} */
+ion-button.custom-button2{
+    --background: #fff;
+    display: inline-block;
+    color:  #3171e0;
+}
+ion-button.custom-button2{
+    --background-activated: #fff;
+}

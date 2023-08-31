@@ -1,0 +1,43 @@
+ion-label.custom-login{
+  font-size: 55px;
+  color: #000;
+  font-family: fangsong;
+  margin-bottom: 2%;
+}
+
+ion-button.custom-button{
+  --background: var(--ion-color-primary,#f80b35 );
+}
+
+.custom-content {
+  --background: rgb(145, 6, 28);
+  /* top: calc(var(--offset-top) * -1);
+  bottom: calc(var(--offset-bottom) * -1);
+  position: absolute; */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;  
+
+}
+.custom-grid{
+  background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 51vh;
+    border-radius: 8px;
+    width: 90%;
+    margin-top:38%;
+}
+
+.input-info{
+  /* color: #c7abab52; */
+  font-size: 15px;
+}
+
+ion-label.custom-email-label{
+/* color: var(--custom-label-color, blue)!important; */
+}

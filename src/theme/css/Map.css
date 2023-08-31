@@ -1,0 +1,16 @@
+ion-button.button-search{
+    /* width: 68%; */
+}
+.search-icon {
+    font-size: 1.5rem;
+    color: #0074d9; /* Couleur bleue de Ionicons, vous pouvez la personnaliser */
+    cursor: pointer;
+    margin-left: 10px; /* Ajustez selon vos besoins */
+  }
+  
+input.input-search{
+    border: none;
+    font-size: 16px;
+    font-family: serif;
+    color: #c8c7cc;
+}
