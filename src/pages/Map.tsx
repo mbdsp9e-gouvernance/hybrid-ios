@@ -1,21 +1,34 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
-import { IonPage, IonContent, IonHeader, IonButtons, IonMenuButton, IonTitle, IonToolbar, IonIcon, IonItem } from '@ionic/react';
+import { IonPage, IonContent, IonHeader, IonButtons, IonMenuButton, IonTitle, IonToolbar, IonIcon, IonItem, useIonRouter } from '@ionic/react';
 import { arrowForwardOutline, searchOutline } from "ionicons/icons";
 import { SearchResult } from "leaflet-geosearch/dist/providers/provider";
 
 import "leaflet/dist/leaflet.css";
 import '../theme/css/Map.css';
+import { checkTokenUser } from "../components/function/checkTokenUser";
 
 const MapComponent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const myProvider = new OpenStreetMapProvider();
   const mapRef = useRef(null);
+  const navigation = useIonRouter();
+
   const travaux = [
     { nom: "Travail 1", statut: "En cours", latitude: 51.505, longitude: -0.09 },
   ];
+  useEffect(() => {
+    const check = async () => {
+      const userData = await checkTokenUser(navigation);
+      // console.log("UserData :", userData);
+    };
+
+    check();
+
+
+  }, []);
   const searchPlaces = async () => {
     try {
       const results = await myProvider.search({ query: searchQuery });

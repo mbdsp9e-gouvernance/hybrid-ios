@@ -28,9 +28,9 @@ import { deleteFileInExternalStorage } from "./function/deleteFileInExternalStor
 const Menu: React.FC = () => {
 
   const paths = [
-    { name: 'Mes soumissions', url: '/Acceuil/Soumission', icon: reloadOutline },
-    { name: 'Notifications', url: '/Acceuil/Map', icon: notificationsOutline },
-    { name: 'Localisation des lieux de travaux', url: '/Acceuil/Map', icon: locateOutline }
+    { name: 'Mes soumissions', url: '/Accueil/Soumission', icon: reloadOutline },
+    // { name: 'Notifications', url: '/Accueil/Map', icon: notificationsOutline },
+    { name: 'Localisation des lieux de travaux', url: '/Accueil/Map', icon: locateOutline }
   ]
   const navigation = useIonRouter();
   const logOut = async () => {
@@ -70,12 +70,12 @@ const Menu: React.FC = () => {
         </IonMenu>
 
         <IonRouterOutlet id="main">
-          <Route path="/Acceuil/Soumission" component={Soumission} />
-          <Route path="/Acceuil/Map" component={Map} />
-          <Route path="/Acceuil/DetailSoumission" component={DetailSoumission} />
+          <Route path="/Accueil/Soumission" component={Soumission} />
+          <Route path="/Accueil/Map" component={Map} />
+          <Route path="/Accueil/DetailSoumission/:submissionId" component={DetailSoumission} />
 
-          <Route exact path="/Acceuil">
-            <Redirect to="/Acceuil/Soumission" />
+          <Route exact path="/Accueil">
+            <Redirect to="/Accueil/Soumission" />
           </Route>
         </IonRouterOutlet>
 

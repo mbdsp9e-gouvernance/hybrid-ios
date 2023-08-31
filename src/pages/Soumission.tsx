@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonContent,
   IonHeader,
@@ -16,13 +16,30 @@ import {
 } from '@ionic/react';
 import '../theme/css/Soumission.css';
 import { checkTokenUser } from "../components/function/checkTokenUser"
+import { wsUrl } from "../components/function/getUrlWebService";
+import { format } from "date-fns";
 
 const Soumission: React.FC = () => {
   const navigation = useIonRouter();
+  const [submissionData, setSubmissionData] = useState<any[]>();
+
   useEffect(() => {
-    const userData = checkTokenUser(navigation).then((value) => {
-      console.log("UserData :", value);
-    });
+    const fetchData = async () => {
+      const userData = await checkTokenUser(navigation);
+      // console.log("UserData :", userData);
+
+      const webServiceUrl = await wsUrl("/soumissions");
+
+      if (webServiceUrl) {
+        const response = await fetch(webServiceUrl);
+        const data = await response.json();
+        setSubmissionData(data.soumissions);
+      } else {
+        console.error("Web service URL not defined in .env");
+      }
+    };
+
+    fetchData();
 
 
   }, []);
@@ -44,42 +61,24 @@ const Soumission: React.FC = () => {
             <IonLabel className="title-custom">Tableau de Suivi des Soumissions</IonLabel>
           </IonListHeader>
           <IonItem className="table-header" lines="full" color="none">
-            <IonCol size="2">Numéro</IonCol>
-            <IonCol size="1.6">Titre</IonCol>
-            <IonCol size="2.5">Date de Soumission</IonCol>
-            <IonCol size="2">Statut </IonCol>
-            <IonCol size="2.1">Documents Fournis</IonCol>
-            <IonCol size="1.8">Action</IonCol>
+            <IonCol size="1.8">Titre</IonCol>
+            <IonCol size="3.1">Date de Soumission</IonCol>
+            <IonCol size="2.2">Statut </IonCol>
+            <IonCol size="3">Documents Fournis</IonCol>
+            <IonCol size="2">Action</IonCol>
           </IonItem>
 
-          {/* Exemple d'une entrée de soumission */}
-          <IonItem className="multiline-item">
-            <IonCol size="2">001</IonCol>
-            <IonCol size="1.6">AO-2023-001</IonCol>
-            <IonCol size="2.5">2023-07-15</IonCol>
-            <IonCol size="2">En Attente</IonCol>
-            <IonCol size="2.1">2</IonCol>
-            <IonCol size="1.8"><a href="/Acceuil/DetailSoumission">Voir</a></IonCol>
-          </IonItem>
-
-          <IonItem className="multiline-item">
-            <IonCol size="2">001</IonCol>
-            <IonCol size="1.6">AO-2023-001</IonCol>
-            <IonCol size="2.5">2023-07-15</IonCol>
-            <IonCol size="2">En Attente</IonCol>
-            <IonCol size="2.1">2</IonCol>
-            <IonCol size="1.8"><a href="/Acceuil/DetailSoumission">Voir</a></IonCol>
-          </IonItem>
-
-          <IonItem className="multiline-item">
-            <IonCol size="2">001</IonCol>
-            <IonCol size="1.6">AO-2023-001</IonCol>
-            <IonCol size="2.5">2023-07-15</IonCol>
-            <IonCol size="2">En Attente</IonCol>
-            <IonCol size="2.1">2</IonCol>
-            <IonCol size="1.8"><a href="/Acceuil/DetailSoumission">Voir</a></IonCol>
-          </IonItem>
-          {/* Fin de la boucle */}
+          {submissionData && submissionData.length && submissionData.map((submission, index) => (
+            <IonItem className="multiline-item" key={index}>
+              <IonCol size="1.8">{submission.tender.title}</IonCol>
+              <IonCol size="3.1">{format(new Date(submission.dateSoumission), "dd/MM/yyyy HH:mm:ss")}</IonCol>
+              <IonCol size="2.2">{submission.status === 1 ? (<>Validé</>) : submission.status === 0 && (<>Rejeté</>)}</IonCol>
+              <IonCol size="3">document a fournir</IonCol>
+              <IonCol size="2">
+                <a href={`/Accueil/DetailSoumission/${submission._id}`}>Voir</a>
+              </IonCol>
+            </IonItem>
+          ))}
         </IonList>
       </IonContent>
     </IonPage>

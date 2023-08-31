@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonHeader,
   IonToolbar,
@@ -12,16 +12,49 @@ import {
   IonList,
   IonButton,
   IonIcon,
+  useIonRouter
 } from '@ionic/react';
 import '../theme/css/DetailSoumission.css';
 import { caretUp, caretDown } from "ionicons/icons";
+import { wsUrl } from "../components/function/getUrlWebService";
+import { useParams } from "react-router-dom";
+import { format } from "date-fns";
+import { checkTokenUser } from "../components/function/checkTokenUser";
 
 const DetailSoumission: React.FC = () => {
+  const { submissionId } = useParams<{ submissionId: string }>();
   const [showMoreDetails, setShowMoreDetails] = useState(false);
+  const [submissionData, setSubmissionData] = useState<any>();
+  const [critereData, setCritereData] = useState<any[]>();
+  const navigation = useIonRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userData = await checkTokenUser(navigation);
+      const urlWs = `/soumissions/${submissionId}`;
+      const webServiceUrl = await wsUrl(urlWs);
+
+      if (webServiceUrl) {
+        const response = await fetch(webServiceUrl);
+        const data = await response.json();
+        setCritereData(data.soumission.tender.critere)
+        setSubmissionData(data.soumission);
+
+      } else {
+        console.error("Web service URL not defined in .env");
+      }
+    };
+
+    fetchData();
+
+
+  }, []);
 
   const toggleShowMoreDetails = () => {
     setShowMoreDetails(!showMoreDetails);
   };
+
+
   return (
     <IonPage>
       <IonHeader>
@@ -33,8 +66,7 @@ const DetailSoumission: React.FC = () => {
         </IonToolbar>
 
       </IonHeader>
-      <IonContent className="ion-padding">
-        {/* Tableau de Suivi des Soumissions */}
+      {submissionData && (<><IonContent className="ion-padding">
         <IonList>
           <IonItem className="table-header" lines="full" color="none">
             <IonCol size="6">TYPE</IonCol>
@@ -43,19 +75,19 @@ const DetailSoumission: React.FC = () => {
 
           <IonItem className="multiline-item">
             <IonCol size="6">NUMERO DE LA SOUMISSION</IonCol>
-            <IonCol size="6">AO-2023-001</IonCol>
+            <IonCol size="6">{submissionData._id}</IonCol>
           </IonItem>
           <IonItem className="multiline-item">
             <IonCol size="6">TITRE DE L'APPEL D'OFFRE</IonCol>
-            <IonCol size="6">AO-2023-001</IonCol>
+            <IonCol size="6">{submissionData.tender.title}</IonCol>
           </IonItem>
           <IonItem className="multiline-item">
             <IonCol size="6">DATE DE SOUMISSION</IonCol>
-            <IonCol size="6">AO-2023-001</IonCol>
+            <IonCol size="6">{format(new Date(submissionData.dateSoumission), "dd/MM/yyyy HH:mm:ss")}</IonCol>
           </IonItem>
           <IonItem className="multiline-item">
             <IonCol size="6">STATUT</IonCol>
-            <IonCol size="6">En attente</IonCol>
+            <IonCol size="6">{submissionData.status === 1 ? (<>Validé</>) : submissionData.status === 0 && (<>Rejeté</>)}</IonCol>
           </IonItem>
           <IonItem className="multiline-item">
             <IonCol size="6">DOCUMENT FOURNIS</IonCol>
@@ -72,34 +104,34 @@ const DetailSoumission: React.FC = () => {
             <>
               <IonItem className="multiline-item">
                 <IonCol size="6">REFERENCE</IonCol>
-                <IonCol size="6">AO-2023-001</IonCol>
-              </IonItem>
-              <IonItem className="multiline-item">
-                <IonCol size="6">TITRE</IonCol>
-                <IonCol size="6">AO-2023-001</IonCol>
+                <IonCol size="6">{submissionData.tender.reference}</IonCol>
               </IonItem>
               <IonItem className="multiline-item">
                 <IonCol size="6">DESCRIPTION </IonCol>
-                <IonCol size="6">Description de l'appel d'offre...</IonCol>
+                <IonCol size="6">{submissionData.tender.description}</IonCol>
               </IonItem>
               <IonItem className="multiline-item">
                 <IonCol size="6">DATE D'EMISSION</IonCol>
-                <IonCol size="6">2023-08-09</IonCol>
+                <IonCol size="6">{format(new Date(submissionData.tender.dateEmission), "dd/MM/yyyy HH:mm:ss")}</IonCol>
               </IonItem>
               <IonItem className="multiline-item">
                 <IonCol size="6">DATE LIMITE</IonCol>
-                <IonCol size="6">2023-08-30</IonCol>
+                <IonCol size="6">{format(new Date(submissionData.tender.dateLimit), "dd/MM/yyyy HH:mm:ss")}</IonCol>
               </IonItem>
-              <IonItem className="multiline-item">
-                <IonCol size="6">CRITÈRES ASSOCIÉS</IonCol>
-                <IonCol size="6">
-                  <ul className="document-list">
-                    <li> <span className="intitule-label">Intitulé 1:</span> Description 1....</li>
-                    <li> <span className="intitule-label">Intitulé 2:</span> Description 2....</li>
-                    <li> <span className="intitule-label">Intitulé 3:</span> Description 3....</li>
-                  </ul>
-                </IonCol>
-              </IonItem>
+              {
+                critereData && (<>
+                  <IonItem className="multiline-item">
+                    <IonCol size="6">CRITÈRES ASSOCIÉS</IonCol>
+                    <IonCol size="6">
+                      <ul className="document-list">
+                        {critereData.map((element, index) => (
+                          <li><span className="intitule-label">Titre :</span>{element.entitle} <span className="intitule-label">Description :</span>{element.description}</li>
+                        ))}
+                      </ul>
+                    </IonCol>
+                  </IonItem>
+                </>)
+              }
             </>
           )}
           <IonItem className="multiline-item" lines="full" color="none">
@@ -114,6 +146,8 @@ const DetailSoumission: React.FC = () => {
 
         </IonList>
       </IonContent>
+      </>)}
+
     </IonPage>
   );
 };

@@ -5,7 +5,7 @@ import {
 } from '@ionic/react';
 import Menu from "../components/Menu";
 
-const Acceuil: React.FC = () => {
+const Accueil: React.FC = () => {
   return (
     <IonApp>
       <IonContent>
@@ -15,4 +15,4 @@ const Acceuil: React.FC = () => {
   );
 };
 
-export default Acceuil;
+export default Accueil;
